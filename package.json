@@ -1,0 +1,14 @@
+{
+  "name": "ai-coding-sample-expense-tracker",
+  "version": "1.0.0",
+  "description": "Expense tracker sample using Google Sheets API",
+  "main": "app.js",
+  "homepage": "https://hoganalin.github.io/AI-coding-sample-Expense-Tracker",
+  "scripts": {
+    "predeploy": "npm install",
+    "deploy": "gh-pages -d ."
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}
