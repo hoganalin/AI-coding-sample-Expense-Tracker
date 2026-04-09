@@ -2,13 +2,13 @@
    你需要填的設定
 ========================= */
 const CONFIG = {
-  CLIENT_ID: "",
-  SPREADSHEET_ID: "",
-
+  CLIENT_ID:
+    "788245343468-oa7gn4anisjnrqcfpcr0bf55qgq49trg.apps.googleusercontent.com",
+  SPREADSHEET_ID: "1Jssusdct-4w-0otnRVkNrQPZ_zXIhfRDn70sXQ0p9-w",
   SHEET_RECORDS: "記帳紀錄",
   SHEET_FIELDS: "欄位表",
 
-  SCOPES: "https://www.googleapis.com/auth/spreadsheets"
+  SCOPES: "https://www.googleapis.com/auth/spreadsheets",
 };
 
 /* =========================
@@ -20,7 +20,7 @@ let gisReady = false;
 
 let fieldOptions = {
   typeToCategories: {},
-  typeToPayments: {}
+  typeToPayments: {},
 };
 
 let currentMonth = "";
@@ -67,7 +67,6 @@ setStatus("等待 Google 登入元件載入中...", false);
    重要：這裡才會初始化 google.accounts
 ========================= */
 window.onGisLoaded = function onGisLoaded() {
-  
   gisReady = true;
 
   if (!window.google || !google.accounts || !google.accounts.oauth2) {
@@ -86,7 +85,7 @@ window.onGisLoaded = function onGisLoaded() {
       accessToken = resp.access_token;
       setStatus("登入成功，已取得授權", false);
       afterSignedIn();
-    }
+    },
   });
 
   btnSignIn.disabled = false;
@@ -272,8 +271,12 @@ function applySelectOptionsForType(type) {
   const cats = Array.from(fieldOptions.typeToCategories[type] || []);
   const pays = Array.from(fieldOptions.typeToPayments[type] || []);
 
-  fCategory.innerHTML = cats.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
-  fPayment.innerHTML = pays.map((p) => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join("");
+  fCategory.innerHTML = cats
+    .map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`)
+    .join("");
+  fPayment.innerHTML = pays
+    .map((p) => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`)
+    .join("");
 }
 
 /* =========================
@@ -303,7 +306,7 @@ async function reloadMonth() {
         Category: (category || "").trim(),
         Amount: Number(amount || 0),
         Description: (desc || "").trim(),
-        Payment: (payment || "").trim()
+        Payment: (payment || "").trim(),
       });
     }
 
@@ -342,8 +345,10 @@ async function submitRecord() {
   const desc = fDescription.value.trim();
 
   if (!date) return setStatus("請選日期", true);
-  if (!["收入", "支出"].includes(type)) return setStatus("Type 只能是 收入 或 支出", true);
-  if (!Number.isFinite(amountNum) || amountNum < 0) return setStatus("Amount 需為非負數", true);
+  if (!["收入", "支出"].includes(type))
+    return setStatus("Type 只能是 收入 或 支出", true);
+  if (!Number.isFinite(amountNum) || amountNum < 0)
+    return setStatus("Amount 需為非負數", true);
   if (!desc) return setStatus("請填寫說明", true);
 
   const id = String(Date.now());
@@ -356,7 +361,7 @@ async function submitRecord() {
     const appendRange = `${CONFIG.SHEET_RECORDS}!A:G`;
     await apiFetch(valuesAppendUrl(appendRange), {
       method: "POST",
-      body: JSON.stringify({ values: [row] })
+      body: JSON.stringify({ values: [row] }),
     });
 
     setStatus("新增成功", false);
@@ -393,7 +398,8 @@ function renderTable(items) {
     })
     .join("");
 
-  recordsTbody.innerHTML = html || `<tr><td colspan="6" class="muted">本月尚無資料</td></tr>`;
+  recordsTbody.innerHTML =
+    html || `<tr><td colspan="6" class="muted">本月尚無資料</td></tr>`;
 }
 
 function renderSummary(items) {
@@ -432,16 +438,18 @@ function renderBreakdown(items) {
     return;
   }
 
-  const rows = list.map(([cat, amt]) => {
-    const pct = total > 0 ? Math.round((amt / total) * 100) : 0;
-    return `
+  const rows = list
+    .map(([cat, amt]) => {
+      const pct = total > 0 ? Math.round((amt / total) * 100) : 0;
+      return `
       <div class="barRow">
         <div>${escapeHtml(cat)}</div>
         <div class="bar"><div style="width:${pct}%"></div></div>
         <div class="right">${escapeHtml(formatMoney(amt))} (${pct}%)</div>
       </div>
     `;
-  }).join("");
+    })
+    .join("");
 
   categoryBreakdown.innerHTML = rows;
 }
